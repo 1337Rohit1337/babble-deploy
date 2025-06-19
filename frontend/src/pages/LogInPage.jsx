@@ -16,6 +16,21 @@ const LoginPage = () => {
     login(formData);
   };
 
+  const userDots = [
+    { top: "35%", left: "25%" }, // USA
+    { top: "40%", left: "75%" }, // India
+    { top: "30%", left: "80%" }, // China
+    { top: "50%", left: "20%" }, // Brazil
+    { top: "20%", left: "50%" }, // UK
+    { top: "45%", left: "65%" }, // Middle East
+    { top: "38%", left: "30%" }, // Canada
+    { top: "60%", left: "85%" }, // Australia
+    { top: "55%", left: "30%" }, // Argentina
+    { top: "42%", left: "60%" }, // Central Africa
+    { top: "25%", left: "70%" }, // Russia
+    { top: "58%", left: "40%" }, // South Africa
+  ];
+
   return (
     <div className="h-screen grid lg:grid-cols-2 font-light">
       {/* Left Side - Form */}
@@ -117,15 +132,12 @@ const LoginPage = () => {
           </h2>
         </div>
 
-        {/* Animated dots representing users */}
-        {[...Array(12)].map((_, i) => (
+        {/* Fixed-position breathing dots */}
+        {userDots.map((dot, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 bg-green-400 rounded-full animate-ping-slow"
-            style={{
-              top: `${Math.random() * 90}%`,
-              left: `${Math.random() * 90}%`,
-            }}
+            className="absolute w-2 h-2 bg-green-400 rounded-full animate-breathe"
+            style={{ top: dot.top, left: dot.left }}
           ></div>
         ))}
       </div>
