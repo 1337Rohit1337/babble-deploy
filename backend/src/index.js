@@ -11,9 +11,10 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 
-
+console.log("NODE_ENV:", process.env.NODE_ENV);
 const __dirname = path.resolve();
 if(process.env.NODE_ENV==="production"){
+  console.log("✅ Serving frontend from /frontend/dist");
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
