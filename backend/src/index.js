@@ -10,8 +10,14 @@ import path from "path";
 dotenv.config();
 
 const PORT = process.env.PORT;
-
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true,
+}))
 console.log("NODE_ENV:", process.env.NODE_ENV);
+
+app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
@@ -25,12 +31,8 @@ if(process.env.NODE_ENV==="production"){
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true,
-}))
+
+
 console.log('Cloudinary config:', process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET);
 
 
