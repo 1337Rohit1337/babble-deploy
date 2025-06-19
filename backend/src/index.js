@@ -12,6 +12,10 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 console.log("NODE_ENV:", process.env.NODE_ENV);
+
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
+
 const __dirname = path.resolve();
 if(process.env.NODE_ENV==="production"){
   console.log("✅ Serving frontend from /frontend/dist");
@@ -30,8 +34,7 @@ app.use(cors({
 console.log('Cloudinary config:', process.env.CLOUDINARY_CLOUD_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET);
 
 
-app.use("/api/auth", authRoutes);
-app.use("/api/messages", messageRoutes);
+
 
 server.listen(PORT,()=>{
     console.log(`Server is running at ${PORT}`);
