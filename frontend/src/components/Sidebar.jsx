@@ -4,9 +4,11 @@ import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 
+
+const AI_USER_ID = "6a3ac759e5fbc564903cf435";
+
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
@@ -27,7 +29,6 @@ const Sidebar = () => {
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
-        {/* TODO: Online filter toggle */}
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -51,27 +52,48 @@ const Sidebar = () => {
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
               ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
+              ${user._id === AI_USER_ID ? "border-l-4 border-purple-500" : ""} 
             `}
           >
             <div className="relative mx-auto lg:mx-0">
               <img
                 src={user.profilePic || "/avatar.png"}
                 alt={user.name}
-                className="size-12 object-cover rounded-full"
+                className={`size-12 object-cover rounded-full 
+                  ${user._id === AI_USER_ID ? "ring-2 ring-purple-500" : ""}
+                `}
               />
-              {onlineUsers.includes(user._id) && (
-                <span
-                  className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
-                />
+              {/* ✅ AI badge */}
+              {user._id === AI_USER_ID ? (
+                <span className="absolute -bottom-1 -right-1 bg-purple-500 
+                  text-white text-[10px] rounded-full px-1">
+                  AI
+                </span>
+              ) : (
+                onlineUsers.includes(user._id) && (
+                  <span className="absolute bottom-0 right-0 size-3 bg-green-500 
+                    rounded-full ring-2 ring-zinc-900"
+                  />
+                )
               )}
             </div>
 
-            {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user.fullName}</div>
+              <div className="font-medium truncate flex items-center gap-1">
+                {user.fullName}
+                {/* ✅ AI label */}
+                {user._id === AI_USER_ID && (
+                  <span className="text-xs bg-purple-500 text-white px-1.5 py-0.5 rounded-full">
+                    🤖 AI
+                  </span>
+                )}
+              </div>
               <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                {user._id === AI_USER_ID
+                  ? "Always available" // 
+                  : onlineUsers.includes(user._id)
+                  ? "Online"
+                  : "Offline"}
               </div>
             </div>
           </button>

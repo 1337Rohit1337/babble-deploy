@@ -14,9 +14,9 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data });
+      set({ users: Array.isArray(res.data) ? res.data : [] });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to load users");
     } finally {
       set({ isUsersLoading: false });
     }
@@ -48,10 +48,12 @@ export const useChatStore = create((set, get) => ({
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
+    const aiUserId = "6a3ac759e5fbc564903cf435";
 
     socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
+      const isFromSelectedUser = newMessage.senderId === selectedUser._id;
+      const isFromAi = newMessage.senderId === aiUserId;
+      if (!isFromSelectedUser && !isFromAi) return;
 
       set({
         messages: [...get().messages, newMessage],
